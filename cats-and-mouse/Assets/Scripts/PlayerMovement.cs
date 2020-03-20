@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] Transform playerCamera;
+    [SerializeField] bool isTrueTopDownSprite;
 
     // Start is called before the first frame update
     void Start()
@@ -22,11 +23,19 @@ public class PlayerMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
 
-        if (Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0)
+        if (Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0) //if moving
         {
-            float angle = Mathf.Atan2(-x, y) * 180 / Mathf.PI;
-            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.fixedDeltaTime);
+            if (isTrueTopDownSprite)
+            {
+                float angle = Mathf.Atan2(-x, y) * 180 / Mathf.PI;
+                Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.fixedDeltaTime);
+            }
+            else
+            {
+                float rotationAngle = (x < 0) ? 180 : 0;
+                transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
+            }
         }
 
         transform.position += (Vector3)(speed * new Vector2(x, y) * Time.fixedDeltaTime);

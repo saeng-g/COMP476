@@ -10,9 +10,12 @@ public class SteeringArrive : MonoBehaviour
     [SerializeField] float maxVelocity;
     [SerializeField] float maxAcceleration;
     [SerializeField] float t2t;
+    [SerializeField] bool isTrueTopDown;
 
     private Vector2 velocity;
     private Vector2 acceleration;
+
+    private float changeDirectionTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -21,14 +24,29 @@ public class SteeringArrive : MonoBehaviour
         Debug.Log(velocity.magnitude);
         acceleration = Vector2.zero;
         target = this.transform.position;
+        ResetChangeDirectionTimer();
     }
 
     // Update is called once per frame
     void Update()
     {
-        SetRandomTarget();
+        // change direction if within timer
+        // TODO: implement more robust behaviour
+        changeDirectionTimer -= Time.deltaTime;
+        if (changeDirectionTimer <= 0)
+        {
+            SetRandomTarget();
+            ResetChangeDirectionTimer();
+        }
+
+        // move
         Reorient();
         Arrive();
+    }
+
+    private void ResetChangeDirectionTimer()
+    {
+        changeDirectionTimer = 0.5f;
     }
 
     // Set target to a random location
@@ -92,9 +110,17 @@ public class SteeringArrive : MonoBehaviour
     {
         if (velocity.magnitude > 0)
         {
-            float angle = Mathf.Atan2(-velocity.x, velocity.y) * 180 / Mathf.PI;
-            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.fixedDeltaTime);
+            if (isTrueTopDown)
+            {
+                float angle = Mathf.Atan2(-velocity.x, velocity.y) * 180 / Mathf.PI;
+                Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.fixedDeltaTime);
+            }
+            else
+            {
+                float rotationAngle = (velocity.x < 0) ? 180 : 0;
+                transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
+            }
         }
     }
 
