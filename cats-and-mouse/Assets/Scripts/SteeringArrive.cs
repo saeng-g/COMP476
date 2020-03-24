@@ -12,16 +12,15 @@ public class SteeringArrive : MonoBehaviour
     [SerializeField] float t2t;
     [SerializeField] bool isTrueTopDown;
 
-    private Vector2 velocity;
-    private Vector2 acceleration;
+    public Vector2 velocity;
+    public Vector2 acceleration;
 
-    private float changeDirectionTimer;
+    public float changeDirectionTimer;
 
     // Start is called before the first frame update
     void Start()
     {
         velocity = Vector2.zero;
-        Debug.Log(velocity.magnitude);
         acceleration = Vector2.zero;
         target = this.transform.position;
         ResetChangeDirectionTimer();
@@ -46,7 +45,7 @@ public class SteeringArrive : MonoBehaviour
 
     private void ResetChangeDirectionTimer()
     {
-        changeDirectionTimer = 0.5f;
+        changeDirectionTimer = 3f;
     }
 
     // Set target to a random location
@@ -122,6 +121,12 @@ public class SteeringArrive : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
             }
         }
+    }
+
+    // Check if character is moving
+    public bool IsMoving()
+    {
+        return velocity.magnitude > 0.1f;
     }
 
     // Set Target to a particular position.
