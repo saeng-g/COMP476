@@ -51,3 +51,6 @@ TagManager:
   - name: Characters
     uniqueID: 3737787815
     locked: 0
+  - name: Alerts
+    uniqueID: 1732900605
+    locked: 0

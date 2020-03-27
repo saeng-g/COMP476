@@ -19,10 +19,15 @@ public class AlertManager : MonoBehaviour
     [SerializeField] GameObject soundAlert;
     [SerializeField] GameObject smellAlert;
 
-    [SerializeField] float catHearAlertTimer;
-    [SerializeField] float catSmellAlertTimer;
-    [SerializeField] float mouseHearAlertTimer;
-    [SerializeField] float mouseSmellAlertTimer;
+    [SerializeField] float maxCatHearAlertTimer;
+    [SerializeField] float maxCatSmellAlertTimer;
+    [SerializeField] float maxMouseHearAlertTimer;
+    [SerializeField] float maxMouseSmellAlertTimer;
+
+    private float catHearAlertTimer;
+    private float catSmellAlertTimer;
+    private float mouseHearAlertTimer;
+    private float mouseSmellAlertTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +44,8 @@ public class AlertManager : MonoBehaviour
     void Update()
     {
         TickTimer();
+        bool resetMouseHearAlertTimer = false;
+        bool resetMouseSmellAlertTimer = false;
         foreach (GameObject cat in cats)
         {
             float d = Vector2.Distance(cat.transform.position, mouse.transform.position);
@@ -51,7 +58,7 @@ public class AlertManager : MonoBehaviour
                 Vector2 vaguePosition = RandomOffsetPosition(cat.transform.position, soundOffset);
                 Vector2 onScreenPosition = GetPositionInViewport(vaguePosition);
                 Instantiate<GameObject>(soundAlert, onScreenPosition, Quaternion.identity);
-                ResetMouseHearTimer();
+                resetMouseHearAlertTimer = true;
             }
             else if (d <= mouseSmellRadius && mouseSmellAlertTimer <= 0)
             {
@@ -59,7 +66,7 @@ public class AlertManager : MonoBehaviour
                 Vector2 vaguePosition = RandomOffsetPosition(cat.transform.position, smellOffset);
                 Vector2 onScreenPosition = GetPositionInViewport(vaguePosition);
                 Instantiate<GameObject>(smellAlert, onScreenPosition, Quaternion.identity);
-                ResetMouseSmellTimer();
+                resetMouseSmellAlertTimer = true;
             }
             // ALERT AI
             if (d <= catHearRadius
@@ -79,6 +86,10 @@ public class AlertManager : MonoBehaviour
                 ResetCatSmellTimer();
             }
         }
+        if (resetMouseHearAlertTimer)
+            ResetMouseHearTimer();
+        if (resetMouseSmellAlertTimer)
+            ResetMouseSmellTimer();
     }
 
     Vector2 RandomOffsetPosition(Vector2 position, float offset)
@@ -111,21 +122,21 @@ public class AlertManager : MonoBehaviour
 
     void ResetCatHearTimer()
     {
-        catHearAlertTimer = 3.0f;
+        catHearAlertTimer = maxCatHearAlertTimer;
     }
 
     void ResetCatSmellTimer()
     {
-        catSmellAlertTimer = 5.0f;
+        catSmellAlertTimer = maxCatSmellAlertTimer;
     }
 
     void ResetMouseHearTimer()
     {
-        mouseHearAlertTimer = 3.0f;
+        mouseHearAlertTimer = maxMouseHearAlertTimer;
     }
 
     void ResetMouseSmellTimer()
     {
-        mouseSmellAlertTimer = 5.0f;
+        mouseSmellAlertTimer = maxMouseSmellAlertTimer;
     }
 }
