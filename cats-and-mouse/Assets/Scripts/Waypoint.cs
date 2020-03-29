@@ -37,21 +37,19 @@ public class Waypoint : MonoBehaviour
         aboveLeftWaypoint };
 
     void Start() {
-        id = int.Parse(gameObject.name.Replace("Waypoint", ""));
+        nearestNeighbors.Clear();
+        SetId();
 
-        Invoke("CheckWaypointsPass1", 0.001f); //delay necessary for each step of checking walkability of waypoints
-        Invoke("CheckWaypointsPass2", 0.002f);
+        Invoke("CheckWaypoints", 0.001f); //delay necessary for checking walkability of waypoints
     }
 
-    void CheckWaypointsPass1() {
-        print("Time before waypoints check: " + Time.time);
-        CheckWalkableWaypoints();
-    }
-    void CheckWaypointsPass2() {
+    void CheckWaypoints() {
         CheckWalkableWaypointsForCat();
-        print("Time after waypoints check: " + Time.time);
     }
 
+    public void SetId() {
+        id = int.Parse(gameObject.name.Replace("Waypoint", ""));
+    }
     public int GetId() {
 		return id;
 	}
@@ -60,38 +58,16 @@ public class Waypoint : MonoBehaviour
         GetComponent<MeshRenderer>().material = highlightColor; //highlights the point itself
     }
 
-    //run this on initialization and any time the level environment changes...
-    public void CheckWalkableWaypoints() {
-        //check if a wall overlaps this waypoint...
-        RaycastHit hit;
-        Vector3 raycastBack = new Vector3(0, 0, 1);
-        walkable = true;
-        //Highlight(walk);
-        if (Physics.Raycast(transform.position, raycastBack, out hit, 10f)) {
-            if (hit.transform.tag == "Wall") {
-                walkable = false;
-                //Highlight(noWalk);
-            }
-        }
-    }
     //again, run this on initialization and any time the level environment changes...
     public void CheckWalkableWaypointsForCat() {
-        if (!walkable) {
-            return;
-        }
-        else {
-            walkableForCat = true;
-            for (int i = 0; i < allAdjacents.Length; i++) {
-                if (walkableForCat) {
-                    RaycastHit hit;
-                    Vector3 raycast = allAdjacents[i];
-                    if (Physics.Raycast(transform.position, raycast, out hit, 1.5f)) {
-                        if (hit.transform.GetComponent<Waypoint>() != null && 
-                            !hit.transform.GetComponent<Waypoint>().walkable) {
-                            walkableForCat = false;
-                            //Highlight(noWalkCat);
-                        }
-                    }
+        walkableForCat = true;
+        for (int i = 0; i < allAdjacents.Length; i++) {
+            RaycastHit hit;
+            Vector3 raycast = allAdjacents[i];
+            if (Physics.Raycast(transform.position, raycast, out hit, 1.5f)) {
+                if (hit.transform.tag == "Wall") {
+                    walkableForCat = false;
+                    Highlight(noWalkCat);
                 }
             }
         }

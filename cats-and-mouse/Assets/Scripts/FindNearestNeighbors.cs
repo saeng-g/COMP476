@@ -6,24 +6,19 @@ public class FindNearestNeighbors : MonoBehaviour
 {
     GameObject[] allWaypoints;
 
-    bool suppressLog;
-
-    float agentRadius = 1.5f;
+    public PursueAStar[] allCats;
 
     // Start is called before the first frame update
     void Start() {
-        suppressLog = true;
-
-        allWaypoints = GameObject.FindGameObjectsWithTag("Waypoints");
-        for (int i = 0; i < allWaypoints.Length; i++) {
-            allWaypoints[i].transform.name = ("Waypoint" + (i+1));
-        }
-
-        NeighborsGrid(allWaypoints, suppressLog);
+        Invoke("SetupNeighborsGrid", 0.003f);
+        Invoke("ReadySignal", 0.004f);
     }
 
-    void NeighborsGrid(GameObject[] allWaypoints, bool suppressLog) {
-        print(allWaypoints.Length); 
+    void SetupNeighborsGrid() {
+        allWaypoints = GameObject.FindGameObjectsWithTag("Waypoints");
+        for (int i = 0; i < allWaypoints.Length; i++) {
+            allWaypoints[i].transform.name = ("Waypoint" + (i + 1));
+        }
 
         for (int i = 0; i < allWaypoints.Length; i++) {
             RaycastHit hitH, hitV;
@@ -43,6 +38,12 @@ public class FindNearestNeighbors : MonoBehaviour
                     hitV.transform.GetComponent<Waypoint>().nearestNeighbors.Add(allWaypoints[i].GetComponent<Waypoint>());
                 }
             }
+        }
+    }
+
+    public void ReadySignal() {
+        foreach (PursueAStar cat in allCats) {
+            cat.gridReady = true;
         }
     }
 }

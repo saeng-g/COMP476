@@ -73,10 +73,12 @@ public class Pathfinding : MonoBehaviour {
 
             fraction = distCovered / journeyLength;
 
-            agent.transform.position = Vector3.Lerp(
-                myPath[currentWaypoint].transform.position,
-                myPath[nextWaypoint].transform.position,
-                fraction);
+            if (myPath[currentWaypoint] != null && myPath[nextWaypoint] != null) {
+                agent.transform.position = Vector3.Lerp(
+                    myPath[currentWaypoint].transform.position,
+                    myPath[nextWaypoint].transform.position,
+                    fraction);
+            }
         }
     }
 
@@ -122,7 +124,7 @@ public class Pathfinding : MonoBehaviour {
 
         List<Waypoint> unvisitedPoints = new List<Waypoint>();
         for (int i = 0; i < allPoints.Length; i++) {
-            if (allPoints[i].walkable && allPoints[i].walkableForCat) { //only consider points that cat can traverse!
+            if (allPoints[i].walkableForCat) { //only consider points that cat can traverse!
                 if (allPoints[i].gameObject.name == startPoint.gameObject.name) {
                     allPoints[i].distance = 0; //distance between start point and itself is 0
                 }
@@ -145,6 +147,7 @@ public class Pathfinding : MonoBehaviour {
                 heuristic = gridSpacing * Mathf.Sqrt(dx * dx + dz * dz); //distance of 4 between each individual tile
             }
 
+            //print("closest: " + closest);
             for (int j = 0; j < closest.nearestNeighbors.Count; j++) {
                 float alt = closest.distance + Vector3.Distance
                     (closest.transform.position, closest.nearestNeighbors[j].transform.position)
@@ -152,10 +155,6 @@ public class Pathfinding : MonoBehaviour {
                 if (alt < closest.nearestNeighbors[j].distance) {
                     closest.nearestNeighbors[j].distance = alt;
                     closest.nearestNeighbors[j].previous = closest;
-                    if (showFill) { //rest of the fill, outside of final path
-                        closest.nearestNeighbors[j].transform.GetComponent<Waypoint>().Highlight
-                            (highlightColor);
-                    }
                 }
             }
 
@@ -171,7 +170,6 @@ public class Pathfinding : MonoBehaviour {
             endPoint.Highlight(pathColor);
 
         Waypoint previousPoint = endPoint.previous;
-        path.Add(previousPoint);
         if (showFill)
             previousPoint.Highlight(pathColor);
 
@@ -184,7 +182,6 @@ public class Pathfinding : MonoBehaviour {
 
         //reverse path to have order be from start to end
         path.Reverse();
-
         return path;
     }
 
@@ -194,47 +191,5 @@ public class Pathfinding : MonoBehaviour {
         fraction = 1;
         startTime = Time.time;
         walking = true;
-    }
-
-    public void MouseClickWaypoints() {
-        if (Input.GetMouseButtonDown(0)) {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 500.0f) && hit.transform.tag == "Waypoints") {
-                print("hit a waypoint!");
-                if (startPointId == -1) { //if start point not yet chosen by mouse...
-                    startPointId = hit.transform.GetComponent<Waypoint>().GetId();
-                    if (showFill)
-                        hit.transform.GetComponent<Waypoint>().Highlight(highlightColor);
-                }
-                else {
-                    endPointId = hit.transform.GetComponent<Waypoint>().GetId();
-                    if (showFill)
-                        hit.transform.GetComponent<Waypoint>().Highlight(highlightColor);
-
-                    Waypoint start = GameObject.Find("Waypoint" + startPointId).GetComponent<Waypoint>();
-                    Waypoint end = GameObject.Find("Waypoint" + endPointId).GetComponent<Waypoint>();
-
-                    if (startPointId != endPointId) { //if specifying a different start and end point
-                        myPath = GetShortestPath(start, end, heuristicToUse);
-                        WalkPath(myPath);
-                    }
-                    else {
-                        //reset only the selected end point by mouse click
-                        endPointId = -1;
-                    }
-                }
-            }
-        }
-    }
-
-    public void MouseClickNavMesh() {
-        if (Input.GetMouseButtonDown(0)) {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 500.0f) && hit.transform.tag != "Wall") {
-                agent.GetComponent<NavMeshAgent>().destination = hit.point;
-            }
-        }
     }
 }

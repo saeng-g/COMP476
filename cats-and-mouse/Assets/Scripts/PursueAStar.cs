@@ -28,15 +28,21 @@ public class PursueAStar : MonoBehaviour {
     public bool atLeftBoundary, atRightBoundary,
         atTopBoundary, atBottomBoundary = false;
 
+    public bool gridReady;
+
     bool wanderDirection = true; //if true, will assign the wandering agent a new random direction to face
 
     void Start() {
+        gridReady = false;
         //InvokeRepeating("RecalculatePath", 2f, 2f);
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        Arrive();
+        if (gridReady) {
+            Arrive();
+            //implement other behaviors here...
+        }
     }
 
     void Arrive() {
@@ -104,8 +110,6 @@ public class PursueAStar : MonoBehaviour {
     }
 
     List<Waypoint> BuildPath(Vector3 generalDirection) {
-        print("building path");
-
         Waypoint targetPoint = null;
         try {
             targetPoint = target.GetComponent<PlayerMovement>().currentWaypointPlayer;

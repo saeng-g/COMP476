@@ -34,16 +34,15 @@ public class WaypointDetectorMouse : MonoBehaviour
 
         float shortestDistance = float.MaxValue;
         for (int i = 0; i < nearbyWaypoints.Count; i++) {
-            //nearbyWaypoints[i].Highlight(nearbyWaypoints[i].noWalkCat);
-            float distance = Vector3.Distance(
-                mouse.position, 
-                nearbyWaypoints[i].transform.position);
-            if (distance < shortestDistance) {
-                shortestDistance = distance;
-                movementClass.currentWaypointPlayer = nearbyWaypoints[i];
-                //nearbyWaypoints[i].Highlight(nearbyWaypoints[i].walk);
+            if (nearbyWaypoints[i].walkableForCat) {
+                float distance = Vector3.Distance(
+                    mouse.position,
+                    nearbyWaypoints[i].transform.position);
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    movementClass.currentWaypointPlayer = nearbyWaypoints[i];
+                }
             }
-
         }
     }
 }
