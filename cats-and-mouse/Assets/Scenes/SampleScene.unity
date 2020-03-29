@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -8930,10 +8930,10 @@ MonoBehaviour:
     type: 3}
   smellAlert: {fileID: 707787977122030978, guid: 27bbefc14c7d2427e897ecba8ab29bf4,
     type: 3}
-  catHearAlertTimer: 0
-  catSmellAlertTimer: 0
-  mouseHearAlertTimer: 0
-  mouseSmellAlertTimer: 0
+  maxCatHearAlertTimer: 0
+  maxCatSmellAlertTimer: 0
+  maxMouseHearAlertTimer: 0
+  maxMouseSmellAlertTimer: 0
 --- !u!4 &563830356
 Transform:
   m_ObjectHideFlags: 0
@@ -9267,6 +9267,11 @@ MonoBehaviour:
   playerCamera: {fileID: 519420032}
   visionLight: {fileID: 3983869}
   isMoving: 0
+  scrollCamera: 0
+  currentWaypointPlayer: {fileID: 0}
+  startingWaypoint: {fileID: 0}
+  currentWaypoint: {fileID: 0}
+  targetWaypoint: {fileID: 0}
 --- !u!212 &1683703141
 SpriteRenderer:
   m_ObjectHideFlags: 0
