@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     [SerializeField] float speed;
     [SerializeField] Transform playerCamera;
-    [SerializeField] bool isTrueTopDownSprite;
+    [SerializeField] Transform visionLight;
+
+    public bool isMoving;
 
     [SerializeField] bool scrollCamera;
 
@@ -27,6 +29,8 @@ public class PlayerMovement : MonoBehaviour {
             speed = 0.5f;
         if (playerCamera == null)
             playerCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        if (visionLight == null)
+            visionLight = GameObject.FindGameObjectWithTag("VisionLight").transform;
     }
 
     // Update is called once per frame
@@ -113,4 +117,5 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
     }
+
 }
