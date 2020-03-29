@@ -35,10 +35,9 @@ public class PlayerMovement : MonoBehaviour {
         float y = Input.GetAxis("Vertical");
 
         if (!moving) {
-            if ((Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0) && !(Mathf.Abs(x) > 0 && Mathf.Abs(y) > 0)) { //if moving on one axis at a time...
-                CheckAdjacentTile(new Vector3(x, y, 0).normalized);
-                
-                /*
+            if (Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0) { //if moving on one axis at a time...
+                //CheckAdjacentTile(new Vector3(x, y, 0).normalized);
+
                 if (isTrueTopDownSprite) {
                     float angle = Mathf.Atan2(-x, y) * 180 / Mathf.PI;
                     Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
@@ -48,53 +47,12 @@ public class PlayerMovement : MonoBehaviour {
                     float rotationAngle = (x < 0) ? 180 : 0;
                     transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
                 }
-                */
-                //lerp from current tile to next one
-            }
-        }
-        else if (targetWaypoint != null) {
-            if (fraction < 1) {
-                journeyLength = Vector3.Distance(
-                    currentWaypoint.transform.position,
-                    targetWaypoint.transform.position);
-
-                float distCovered = 0;
-                distCovered = (Time.time - startTime) * speed;
-
-                fraction = distCovered / journeyLength;
-
-                transform.position = new Vector3(
-                    Vector3.Lerp(
-                        currentWaypoint.transform.position,
-                        targetWaypoint.transform.position,
-                        fraction).x,
-                    Vector3.Lerp(
-                        currentWaypoint.transform.position,
-                        targetWaypoint.transform.position,
-                        fraction).y,
-                    transform.position.z
-                    );
-            }
-            else {
-                currentWaypoint = targetWaypoint; //target point/tile was reached
-                moving = false;
             }
         }
 
-        /*transform.position += (Vector3)(speed * new Vector2(x, y) * Time.fixedDeltaTime);
+        transform.position += (Vector3)(speed * new Vector2(x, y) * Time.fixedDeltaTime);
         if (scrollCamera) {
             playerCamera.position = transform.position + (Vector3.forward * -10);
-        }*/
-    }
-
-    Waypoint GetCurrentWaypoint(Collider other) {
-        currentWaypointPlayer = other.GetComponent<Waypoint>();
-        return currentWaypointPlayer;
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (other.tag == "Waypoints") {
-            GetCurrentWaypoint(other);
         }
     }
 
