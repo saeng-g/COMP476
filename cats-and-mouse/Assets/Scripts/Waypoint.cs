@@ -37,7 +37,7 @@ public class Waypoint : MonoBehaviour
         aboveLeftWaypoint };
 
     void Start() {
-        id = int.Parse(gameObject.name.Replace("Waypoint", ""));
+        //id = int.Parse(gameObject.name.Replace("Waypoint", ""));
 
         Invoke("CheckWaypointsPass1", 0.001f); //delay necessary for each step of checking walkability of waypoints
         Invoke("CheckWaypointsPass2", 0.002f);
