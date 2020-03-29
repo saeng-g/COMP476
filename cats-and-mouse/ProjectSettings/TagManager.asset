@@ -7,6 +7,8 @@ TagManager:
   - Waypoints
   - Floor
   - Wall
+  - Cat
+  - VisionLight
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - 
   - floor
   - on
-  - 
+  - wall
   - 
   - 
   - 
@@ -52,4 +54,7 @@ TagManager:
     locked: 0
   - name: Characters
     uniqueID: 3737787815
+    locked: 0
+  - name: Waypoints
+    uniqueID: 470144975
     locked: 0

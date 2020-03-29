@@ -14,7 +14,7 @@ public class Waypoint : MonoBehaviour
     public float distance; //stores its distance from the start point when calculating a shortest path
     public Waypoint previous;
 
-    public Material walk, noWalk, noWalkCat;
+    public Color walk, noWalk, noWalkCat;
 
     //used for checking adjacent waypoints
     static Vector3 aboveWaypoint = new Vector3(0, 1, 0);
@@ -45,7 +45,7 @@ public class Waypoint : MonoBehaviour
 
     void CheckWaypointsPass1() {
         print("Time before waypoints check: " + Time.time);
-        CheckWalkableWaypoints();
+        //CheckWalkableWaypoints();
     }
     void CheckWaypointsPass2() {
         CheckWalkableWaypointsForCat();
@@ -56,8 +56,8 @@ public class Waypoint : MonoBehaviour
 		return id;
 	}
 
-    public void Highlight(Material highlightColor) {
-        GetComponent<MeshRenderer>().material = highlightColor; //highlights the point itself
+    public void Highlight(Color highlightColor) {
+        GetComponent<SpriteRenderer>().color = highlightColor; //highlights the point itself
     }
 
     //run this on initialization and any time the level environment changes...
@@ -66,14 +66,29 @@ public class Waypoint : MonoBehaviour
         RaycastHit hit;
         Vector3 raycastBack = new Vector3(0, 0, 1);
         walkable = true;
-        //Highlight(walk);
+        Highlight(walk);
         if (Physics.Raycast(transform.position, raycastBack, out hit, 10f)) {
             if (hit.transform.tag == "Wall") {
                 walkable = false;
-                //Highlight(noWalk);
+                Highlight(noWalk);
             }
         }
     }
+
+    public void CheckWalkableWaypoints2D()
+    {
+        //adaptation of CheckWalkableWaypoints for 2D rays and colliders
+        Vector2 raycastBack = new Vector2(0.1f, 0.1f);
+        walkable = true;
+        Highlight(walk);
+        if (Physics2D.Raycast(transform.position, raycastBack, 0.1f, LayerMask.GetMask("Wall")))
+        {
+            Debug.Log("HIT");
+            walkable = false;
+            Highlight(noWalk);
+        }
+    }
+
     //again, run this on initialization and any time the level environment changes...
     public void CheckWalkableWaypointsForCat() {
         if (!walkable) {
@@ -89,7 +104,7 @@ public class Waypoint : MonoBehaviour
                         if (hit.transform.GetComponent<Waypoint>() != null && 
                             !hit.transform.GetComponent<Waypoint>().walkable) {
                             walkableForCat = false;
-                            //Highlight(noWalkCat);
+                            Highlight(noWalkCat);
                         }
                     }
                 }

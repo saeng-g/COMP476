@@ -56,7 +56,7 @@ MonoBehaviour:
     type: 3}
   smellAlert: {fileID: 707787977122030978, guid: 27bbefc14c7d2427e897ecba8ab29bf4,
     type: 3}
-  maxCatHearAlertTimer: 0
-  maxCatSmellAlertTimer: 0
-  maxMouseHearAlertTimer: 0
-  maxMouseSmellAlertTimer: 0
+  maxCatHearAlertTimer: 2
+  maxCatSmellAlertTimer: 2
+  maxMouseHearAlertTimer: 2
+  maxMouseSmellAlertTimer: 2

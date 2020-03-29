@@ -13,7 +13,7 @@ public class Grid : MonoBehaviour
 
         if (!waypointsVisible) {
             for (int i = 0; i < allWaypoints.Length; i++) {
-                allWaypoints[i].GetComponent<MeshRenderer>().enabled = false;
+                allWaypoints[i].GetComponent<SpriteRenderer>().enabled = false;
             }
         }
     }

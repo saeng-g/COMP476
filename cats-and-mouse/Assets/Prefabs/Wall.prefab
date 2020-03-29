@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7086514361589120372}
   - component: {fileID: 7283646454365932991}
-  m_Layer: 0
+  - component: {fileID: -2947059295677108678}
+  m_Layer: 10
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765516002349727817}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -67.159874, y: -13.752299, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2056637848748827179}
@@ -49,7 +50,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,6 +82,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &-2947059295677108678
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765516002349727817}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1001 &2325108762649553215
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92,6 +119,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Waypoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8379667486896305385, guid: e783de07aafb74927abe8d30c3e97f28,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8379667486896305385, guid: e783de07aafb74927abe8d30c3e97f28,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4381676036351576852, guid: e783de07aafb74927abe8d30c3e97f28,
         type: 3}
@@ -106,7 +143,7 @@ PrefabInstance:
     - target: {fileID: 4381676036351576852, guid: e783de07aafb74927abe8d30c3e97f28,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4381676036351576852, guid: e783de07aafb74927abe8d30c3e97f28,
         type: 3}
@@ -146,6 +183,16 @@ PrefabInstance:
     - target: {fileID: 4381676036351576852, guid: e783de07aafb74927abe8d30c3e97f28,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5913030213819006885, guid: e783de07aafb74927abe8d30c3e97f28,
+        type: 3}
+      propertyPath: visited
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5913030213819006885, guid: e783de07aafb74927abe8d30c3e97f28,
+        type: 3}
+      propertyPath: walkable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

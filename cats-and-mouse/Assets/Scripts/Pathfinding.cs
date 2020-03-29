@@ -36,7 +36,7 @@ public class Pathfinding : MonoBehaviour {
     int currentWaypoint, nextWaypoint; //for the actual walking along the shortest path
     private float startTime, journeyLength, fraction;
 
-    public Material highlightColor, pathColor, normalColor;
+    public Color highlightColor, pathColor, normalColor;
 
     private void FixedUpdate() {
         //path walking code
