@@ -104,7 +104,7 @@ public class PursueAStar : MonoBehaviour {
     }
 
     List<Waypoint> BuildPath(Vector3 generalDirection) {
-        print("building path");
+        //print("building path");
 
         Waypoint targetPoint = null;
         try {

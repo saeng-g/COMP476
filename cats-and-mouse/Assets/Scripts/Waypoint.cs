@@ -40,16 +40,16 @@ public class Waypoint : MonoBehaviour
         //id = int.Parse(gameObject.name.Replace("Waypoint", ""));
 
         Invoke("CheckWaypointsPass1", 0.001f); //delay necessary for each step of checking walkability of waypoints
-        Invoke("CheckWaypointsPass2", 0.002f);
+        Invoke("CheckWaypointsPass2", 3f);
     }
 
     void CheckWaypointsPass1() {
-        print("Time before waypoints check: " + Time.time);
+        //print("Time before waypoints check: " + Time.time);
         //CheckWalkableWaypoints();
     }
     void CheckWaypointsPass2() {
         CheckWalkableWaypointsForCat();
-        print("Time after waypoints check: " + Time.time);
+        //print("Time after waypoints check: " + Time.time);
     }
 
     public int GetId() {
@@ -107,6 +107,27 @@ public class Waypoint : MonoBehaviour
                             Highlight(noWalkCat);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public void CheckWalkableWaypointsForCat2D()
+    {
+        if (!walkable)
+        {
+            return;
+        }
+        else
+        {
+            walkableForCat = true;
+            for (int i = 0; i < allAdjacents.Length; i++)
+            {
+                if (walkableForCat)
+                {
+                    RaycastHit2D hit;
+                    Vector2 rayDir = allAdjacents[i];
+                    Physics.Raycast(transform.position, rayDir, new C)
                 }
             }
         }

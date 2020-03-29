@@ -54,22 +54,33 @@ public class FindNearestNeighbors : MonoBehaviour
         Debug.Log(allWaypoints.Length);
         for (int i = 0; i < allWaypoints.Length; i++)
         {
-            RaycastHit2D hitH_2D, hitV_2D;
+            ContactFilter2D cf = new ContactFilter2D();
+            List<RaycastHit2D> hitH_2D = new List<RaycastHit2D>();
+            List<RaycastHit2D> hitV_2D = new List<RaycastHit2D>();
             Vector2 rayH_2D = new Vector2(1, 0);
             Vector2 rayV_2D = new Vector2(0, -1);
 
-            hitH_2D = Physics2D.Raycast(allWaypoints[i].transform.position, rayH_2D, 1f,);
-            hitV_2D = Physics2D.Raycast(allWaypoints[i].transform.position, rayV_2D, 1f);
-            if (hitH_2D && hitH_2D.transform.CompareTag("Waypoints"))
+            Physics2D.Raycast(allWaypoints[i].transform.position, rayH_2D, cf.NoFilter(), hitH_2D, 1f);
+            Physics2D.Raycast(allWaypoints[i].transform.position, rayV_2D, cf.NoFilter(), hitV_2D, 1f);
+
+            hitH_2D.RemoveAll(x => x.transform.name.Equals(allWaypoints[i].name));
+            hitV_2D.RemoveAll(x => x.transform.name.Equals(allWaypoints[i].name));
+
+            if (hitH_2D.Count > 0 && hitH_2D[0].transform.CompareTag("Waypoints"))
             {
-                Debug.Log(allWaypoints[i].name);
-                allWaypoints[i].GetComponent<Waypoint>().nearestNeighbors.Add(hitH_2D.transform.GetComponent<Waypoint>());
-                hitH_2D.transform.GetComponent<Waypoint>().nearestNeighbors.Add(allWaypoints[i].GetComponent<Waypoint>());
+                Debug.Log(allWaypoints[i]);
+                Debug.Log(hitH_2D.Count);
+                for (int p = 0; p < hitH_2D.Count; p++)
+                {
+                    Debug.Log(hitH_2D[p].transform);
+                }
+                allWaypoints[i].GetComponent<Waypoint>().nearestNeighbors.Add(hitH_2D[0].transform.GetComponent<Waypoint>());
+                hitH_2D[0].transform.GetComponent<Waypoint>().nearestNeighbors.Add(allWaypoints[i].GetComponent<Waypoint>());
             }
-            if (hitV_2D && hitV_2D.transform.CompareTag("Waypoints"))
+            if (hitV_2D.Count > 0 && hitV_2D[0].transform.CompareTag("Waypoints"))
             {
-                allWaypoints[i].GetComponent<Waypoint>().nearestNeighbors.Add(hitV_2D.transform.GetComponent<Waypoint>());
-                hitV_2D.transform.GetComponent<Waypoint>().nearestNeighbors.Add(allWaypoints[i].GetComponent<Waypoint>());
+                allWaypoints[i].GetComponent<Waypoint>().nearestNeighbors.Add(hitV_2D[0].transform.GetComponent<Waypoint>());
+                hitV_2D[0].transform.GetComponent<Waypoint>().nearestNeighbors.Add(allWaypoints[i].GetComponent<Waypoint>());
             }
         }
     }
