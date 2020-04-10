@@ -108,7 +108,7 @@ public class PursueAStar : MonoBehaviour {
 
         Waypoint targetPoint = null;
         try {
-            targetPoint = target.GetComponent<PlayerMovement>().currentWaypointPlayer;
+//            targetPoint = target.GetComponent<PlayerMovement>().currentWaypointPlayer;
         }
         catch (NullReferenceException e) {
         }

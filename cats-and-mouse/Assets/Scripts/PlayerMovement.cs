@@ -14,14 +14,6 @@ public class PlayerMovement : MonoBehaviour {
 
     bool moving;
 
-    public Waypoint currentWaypointPlayer; //where player currently is
-
-    public Waypoint startingWaypoint; //where player starts
-    [HideInInspector]
-    public Waypoint currentWaypoint, targetWaypoint;
-
-    private float fraction, journeyLength, startTime; //used to do lerping
-
     [SerializeField] bool isTrueTopDownSprite;
     GameObject cornerTilemap;
 
@@ -65,71 +57,12 @@ public class PlayerMovement : MonoBehaviour {
                     float rotationAngle = (x < 0) ? 180 : 0;
                     transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
                 }
-                //lerp from current tile to next one
             }
         }
-        /*
-        else if (targetWaypoint != null) {
-            if (fraction < 1) {
-                journeyLength = Vector3.Distance(
-                    currentWaypoint.transform.position,
-                    targetWaypoint.transform.position);
-
-                float distCovered = 0;
-                distCovered = (Time.time - startTime) * speed;
-
-                fraction = distCovered / journeyLength;
-
-                transform.position = new Vector3(
-                    Vector3.Lerp(
-                        currentWaypoint.transform.position,
-                        targetWaypoint.transform.position,
-                        fraction).x,
-                    Vector3.Lerp(
-                        currentWaypoint.transform.position,
-                        targetWaypoint.transform.position,
-                        fraction).y,
-                    transform.position.z
-                    );
-            }
-            else {
-                currentWaypoint = targetWaypoint; //target point/tile was reached
-                moving = false;
-            }
-        }
-        */
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
         transform.position += (Vector3) currentVelocity;
         playerCamera.position = transform.position + (Vector3.forward * -10);
-    }
-
-    
-    Waypoint GetCurrentWaypoint(Collider other) {
-        currentWaypointPlayer = other.GetComponent<Waypoint>();
-        return currentWaypointPlayer;
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (other.tag == "Waypoints") {
-            GetCurrentWaypoint(other);
-        }
-    }
-
-    void CheckAdjacentTile(Vector3 theDirection) {
-        RaycastHit hit;
-
-        if (Physics.Raycast(currentWaypoint.transform.position, theDirection, out hit, 1.5f)) {
-            if (hit.transform.tag == "Waypoints") {
-                if (hit.transform.GetComponent<Waypoint>().walkable) {
-                    //move towards this waypoint
-                    targetWaypoint = hit.transform.GetComponent<Waypoint>();
-                    fraction = 0;
-                    startTime = Time.time;
-                    moving = true;
-                }
-            }
-        }
     }
 
     Vector2 getNextPosition()
@@ -156,6 +89,16 @@ public class PlayerMovement : MonoBehaviour {
         if (collision.name.Contains("Corner"))
         {
             cornerTilemap = null;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Waypoint_V2 toWp = Grid_V2.Instance.FindClosestWaypoint(this.transform.position);
+        if (toWp != null)
+        {
+            Gizmos.DrawLine(this.transform.position, toWp.transform.position);
         }
     }
 }
