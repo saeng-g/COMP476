@@ -19,8 +19,8 @@ public class Waypoint_V2 : MonoBehaviour
     {
         walkable = true;
         Invoke("FindNeighbours", 0f);
-        Invoke("CheckWalkableWaypointsForCat", 0.1f);
-        Invoke("FindWalkableNeighbors", 0.2f);
+        Invoke("CheckWalkableWaypointsForCat", 0.5f);
+        Invoke("FindWalkableNeighbors", 1f);
     }
 
     //Finds neighbors by sending rays to surrounding.

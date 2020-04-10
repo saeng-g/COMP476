@@ -25,7 +25,7 @@ public class Grid_V2 : MonoBehaviour
         Instance = this;
         waypoints = new List<Waypoint_V2>(FindObjectsOfType<Waypoint_V2>());
         Debug.Log("Total nb of waypoints (before walkability update): " + waypoints.Count);
-        Invoke("UpdateWaypointsList", 0.5f); // this is so that the function is called after ALL Waypoint_V2 Invoked methods are finished
+        Invoke("UpdateWaypointsList", 1.5f); // this is so that the function is called after ALL Waypoint_V2 Invoked methods are finished
     }
 
     // removes unwalkable waypoints from the waypoints list
@@ -41,7 +41,7 @@ public class Grid_V2 : MonoBehaviour
     public Waypoint_V2 FindClosestWaypoint(Vector2 position)
     {
         List<RaycastHit2D> hits = new List<RaycastHit2D>();
-        Physics2D.CircleCast(position, 0.5f, Vector2.zero, new ContactFilter2D().NoFilter(), hits);
+        Physics2D.CircleCast(position, 3f, Vector2.zero, new ContactFilter2D().NoFilter(), hits);
         hits.RemoveAll(x => x.transform.gameObject.layer != LayerMask.NameToLayer("waypoint"));
         hits.RemoveAll(x => !x.transform.GetComponent<Waypoint_V2>().walkable);
 
@@ -61,6 +61,9 @@ public class Grid_V2 : MonoBehaviour
         if (closestHit != null)
             return closestHit;
         else
+        {
+            Debug.LogWarning("Could not find closest waypoint to the following position: " + position);
             return null;
+        }
     }
 }

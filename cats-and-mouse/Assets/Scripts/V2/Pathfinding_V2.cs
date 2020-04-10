@@ -18,9 +18,9 @@ public class Pathfinding_V2 : MonoBehaviour
         public Waypoint_V2 wp;
         public float heuristic;
 
-        public Node(Waypoint_V2 wp)
+        public Node(Waypoint_V2 wp_)
         {
-            this.wp = wp;
+            this.wp = wp_;
             this.heuristic = 0;
         }
     }
@@ -97,9 +97,9 @@ public class Pathfinding_V2 : MonoBehaviour
     public List<Entry> GetPath(Vector2 startPos, Vector2 endPos, GetHeuristic hx)
     {
         Node startNode = GetClosestNode(startPos);
-        //Debug.Log(startNode.position);
+        Debug.Log("Start:" + startNode.wp);
         Node goalNode = GetClosestNode(endPos);
-        //Debug.Log(goalNode.position);
+        Debug.Log("End:" + goalNode.wp);
 
         List<Entry> openList = new List<Entry>();
         List<Entry> closedList = new List<Entry>();
@@ -117,7 +117,20 @@ public class Pathfinding_V2 : MonoBehaviour
             // check each neighbor and add to open list
             foreach (Waypoint_V2 neighbor in currentNode.wp.neighbors)
             {
+                if (neighbor == null)
+                {
+                    Debug.LogError("neighbor was null");
+                    Debug.LogError(neighbor.transform.position);
+                    Debug.LogError(currentNode.wp.transform.position);
+                }
                 Node neighborNode = new Node(neighbor);
+                if (neighborNode == null || neighborNode.wp == null)
+                {
+                    Debug.LogError("neighbor node was null");
+                    Debug.LogError(neighborNode.wp);
+                    Debug.LogError(neighbor.transform.position);
+                    Debug.LogError(currentNode.wp.transform.position);
+                }
                 float cost = Vector3.Distance(currentNode.wp.transform.position, neighbor.transform.position);
                 float h = hx(neighborNode, goalNode);
                 Entry tmp = new Entry(neighborNode, currentCost + cost, h, currentNode);
@@ -234,16 +247,15 @@ public class Pathfinding_V2 : MonoBehaviour
         }
     }
 
-    private float refreshPath = 3f;
     public void Start()
     {
-        Invoke("TestPathGen", 3f);
+        InvokeRepeating("TestPathGen", 3f, 1f);
     }
 
     private void TestPathGen()
     {
-        Vector2 startpos = new Vector2(-4, 5);
-        Vector2 endpos = new Vector2(3, -1);
+        Vector2 startpos = new Vector2(Random.Range(-31, 10), Random.Range(-19, 19));
+        Vector2 endpos = new Vector2(Random.Range(-31, 10), Random.Range(-19, 19));
 
         p = GetPathForChars(startpos, endpos);
     }
