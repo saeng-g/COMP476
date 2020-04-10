@@ -22,24 +22,23 @@ public class PlayerMovement : MonoBehaviour {
 
     private float fraction, journeyLength, startTime; //used to do lerping
 
-    // Start is called before the first frame update
-    void Start() {
-        currentWaypoint = startingWaypoint;
-
-        if (speed <= 0)
-/*
     [SerializeField] bool isTrueTopDownSprite;
     GameObject cornerTilemap;
 
     Vector2 currentVelocity;
 
+
+
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         cornerTilemap = null;
         currentVelocity = new Vector2(0.0f, 0.0f);
+        /*
         if (speed <= 0)
-*/
+            currentWaypoint = startingWaypoint;
+        */
+
+        if (speed <= 0)
             speed = 0.5f;
         if (playerCamera == null)
             playerCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
@@ -54,9 +53,9 @@ public class PlayerMovement : MonoBehaviour {
 
         if (!moving) {
             if ((Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0) && !(Mathf.Abs(x) > 0 && Mathf.Abs(y) > 0)) { //if moving on one axis at a time...
-                CheckAdjacentTile(new Vector3(x, y, 0).normalized);
+                //CheckAdjacentTile(new Vector3(x, y, 0).normalized);
                 
-                /*
+                
                 if (isTrueTopDownSprite) {
                     float angle = Mathf.Atan2(-x, y) * 180 / Mathf.PI;
                     Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
@@ -66,10 +65,10 @@ public class PlayerMovement : MonoBehaviour {
                     float rotationAngle = (x < 0) ? 180 : 0;
                     transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
                 }
-                */
                 //lerp from current tile to next one
             }
         }
+        /*
         else if (targetWaypoint != null) {
             if (fraction < 1) {
                 journeyLength = Vector3.Distance(
@@ -98,6 +97,7 @@ public class PlayerMovement : MonoBehaviour {
                 moving = false;
             }
         }
+        */
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
         transform.position += (Vector3) currentVelocity;

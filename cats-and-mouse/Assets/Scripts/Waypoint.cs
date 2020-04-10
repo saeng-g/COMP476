@@ -127,7 +127,6 @@ public class Waypoint : MonoBehaviour
                 {
                     RaycastHit2D hit;
                     Vector2 rayDir = allAdjacents[i];
-                    Physics.Raycast(transform.position, rayDir, new C)
                 }
             }
         }
