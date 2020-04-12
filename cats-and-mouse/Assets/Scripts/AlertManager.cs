@@ -51,7 +51,7 @@ public class AlertManager : MonoBehaviour
             float d = Vector2.Distance(cat.transform.position, mouse.transform.position);
             // ALERT PLAYER
             if (d <= mouseHearRadius
-                && cat.GetComponent<SteeringArrive>().IsMoving()
+                && cat.GetComponent<CatMovementController>().IsMoving()
                 && mouseHearAlertTimer <= 0)
             {
                 // alert player of cat sounds
@@ -75,14 +75,14 @@ public class AlertManager : MonoBehaviour
             {
                 // alert cats of mouse sounds
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, soundOffset);
-                cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
+                //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
                 ResetCatHearTimer();
             }
             else if (d <= catSmellRadius && catSmellAlertTimer <= 0)
             {
                 // alert cats of mouse smell
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, smellOffset);
-                cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
+                //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
                 ResetCatSmellTimer();
             }
         }

@@ -58,3 +58,6 @@ TagManager:
   - name: Waypoints
     uniqueID: 470144975
     locked: 0
+  - name: Alerts
+    uniqueID: 3696067769
+    locked: 0
