@@ -90,4 +90,16 @@ public class SteeringArrive_V2 : CatMovementScript
     {
         return velocity.magnitude > 0.1f;
     }
+
+    private void OnDrawGizmos()
+    {
+        if (!this.enabled)
+            return;
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(this.transform.position, target);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(new Ray(this.transform.position, velocity));
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(new Ray(this.transform.position, acceleration));
+    }
 }

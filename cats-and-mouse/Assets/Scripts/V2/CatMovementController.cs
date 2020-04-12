@@ -43,7 +43,7 @@ public class CatMovementController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        movementState = MovementBehaviorState.ARRIVE;
+        movementState = MovementBehaviorState.PURSUE;
         targetLocation = transform.position;
         recomputePathTimer = 3f;
     }
@@ -70,6 +70,7 @@ public class CatMovementController : MonoBehaviour
         if (recomputePathTimer <= 0)
         {
             GetNewPath();
+            movementState = MovementBehaviorState.PURSUE;
             recomputePathTimer = recomputePathTime;
         }
 
@@ -78,6 +79,7 @@ public class CatMovementController : MonoBehaviour
         {
             if (pathIndex >= pathToFollow.trimmedPathCoordList.Count - 1)
             {
+                movementState = MovementBehaviorState.ARRIVE;
                 targetLocation = transform.position;
                 return;
             }
@@ -97,10 +99,9 @@ public class CatMovementController : MonoBehaviour
     {
         pathToFollow = pathfinder.GetPathForChars(this.transform.position, targetForPathfinding);
         pathIndex = 0;
+        targetLocation = pathToFollow.trimmedPathCoordList[pathIndex];
         if (pathToFollow == null)
             Debug.Log("no path was returned from pathfinder");
-        else
-            Debug.Log(pathToFollow.trimmedPathCoordList.Count);
     }
 
 
@@ -152,9 +153,9 @@ public class CatMovementController : MonoBehaviour
             return false;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        if (pathToFollow == null)
+        if (pathToFollow == null || !this.enabled)
             return;
         Gizmos.color = Color.red;
         foreach (var e in pathToFollow.trimmedPathEntryList)
