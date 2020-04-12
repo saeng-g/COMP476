@@ -5,6 +5,7 @@ using UnityEngine;
 public class AlertManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> cats;
+    [SerializeField] CatController catController;
     [SerializeField] GameObject mouse;
     [SerializeField] Camera cam;
 
@@ -34,6 +35,8 @@ public class AlertManager : MonoBehaviour
     {
         if (cats == null || cats.Count < 1)
             cats = new List<GameObject>(GameObject.FindGameObjectsWithTag("Cat"));
+        if (catController == null)
+            catController = GameObject.FindObjectOfType<CatController>();
         if (mouse == null)
             mouse = GameObject.FindGameObjectWithTag("Player");
         if (cam == null)
@@ -76,6 +79,7 @@ public class AlertManager : MonoBehaviour
                 // alert cats of mouse sounds
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, soundOffset);
                 //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
+                catController.AddAlert(vaguePosition, CatController.HEAR_ALERT);
                 ResetCatHearTimer();
             }
             else if (d <= catSmellRadius && catSmellAlertTimer <= 0)
@@ -83,6 +87,7 @@ public class AlertManager : MonoBehaviour
                 // alert cats of mouse smell
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, smellOffset);
                 //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
+                catController.AddAlert(vaguePosition, CatController.SMELL_ALERT);
                 ResetCatSmellTimer();
             }
         }

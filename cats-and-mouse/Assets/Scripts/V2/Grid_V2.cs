@@ -38,12 +38,14 @@ public class Grid_V2 : MonoBehaviour
     }
 
     // Returns waypoint closest to the parameter:position
-    public Waypoint_V2 FindClosestWaypoint(Vector2 position)
+    public Waypoint_V2 FindClosestWaypoint(Vector2 position, bool walkableOnly)
     {
         List<RaycastHit2D> hits = new List<RaycastHit2D>();
-        Physics2D.CircleCast(position, 3f, Vector2.zero, new ContactFilter2D().NoFilter(), hits);
+        float raycastDistance = walkableOnly ? 5f : 3f;
+        Physics2D.CircleCast(position, raycastDistance, Vector2.zero, new ContactFilter2D().NoFilter(), hits);
         hits.RemoveAll(x => x.transform.gameObject.layer != LayerMask.NameToLayer("waypoint"));
-        hits.RemoveAll(x => !x.transform.GetComponent<Waypoint_V2>().walkable);
+        if (walkableOnly)
+            hits.RemoveAll(x => !x.transform.GetComponent<Waypoint_V2>().walkable);
 
         float smallestDistance = float.PositiveInfinity;
         Waypoint_V2 closestHit = null;

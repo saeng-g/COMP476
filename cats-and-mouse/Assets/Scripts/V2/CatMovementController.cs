@@ -153,6 +153,11 @@ public class CatMovementController : MonoBehaviour
             return false;
     }
 
+    public void ChangeMovementState(MovementBehaviorState state)
+    {
+        this.movementState = state;
+    }
+
     private void OnDrawGizmos()
     {
         if (pathToFollow == null || !this.enabled)

@@ -77,7 +77,7 @@ public class Waypoint_V2 : MonoBehaviour
         if (!walkable)
         {
             neighbors.Clear();
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
         else
             neighbors.RemoveAll(x => !x.walkable);
