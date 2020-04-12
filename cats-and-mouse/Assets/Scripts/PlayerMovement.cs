@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] float speed;
     [Tooltip("the camera to follow the player")]
     [SerializeField] Transform playerCamera;
+    [Tooltip("Set as false if you want the camera to be stationary. (For testing?)")]
+    [SerializeField] bool scrollCamera;
     [Tooltip("The light object that works as the players circle of sight")]
     [SerializeField] Transform visionLight;
 
@@ -19,6 +21,14 @@ public class PlayerMovement : MonoBehaviour {
     GameObject cornerTilemap; //for tacticalRegionDetection
     Vector2 currentVelocity;
     public bool isMoving;
+
+    // Cheese related fields
+    //score depending on amount of cheese eaten
+    float score;
+    //max cheese consumption
+    const float MAXCHEESE = 20;
+    //cheese score
+    const float CHEESESCORE = 5;
 
     // Start is called before the first frame update
     void Start() {
@@ -49,8 +59,10 @@ public class PlayerMovement : MonoBehaviour {
             isMoving = false;
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
+        currentVelocity = ComputeVelocityWithCheese(currentVelocity);
         transform.position += (Vector3) currentVelocity;
-        playerCamera.position = transform.position + (Vector3.forward * -10);
+        if (scrollCamera)
+            playerCamera.position = transform.position + (Vector3.forward * -10);
     }
 
     // For pursue
@@ -81,6 +93,22 @@ public class PlayerMovement : MonoBehaviour {
         {
             cornerTilemap = collision.gameObject;
         }
+
+        //luca's code
+        if (collision.name.Contains("Cheese"))
+        {
+            Destroy(collision.gameObject);
+
+            //TODO: Determine what we want score to be
+            score += CHEESESCORE;
+        }
+    }
+
+    private Vector2 ComputeVelocityWithCheese(Vector2 velocity)
+    {
+        float ratio = 1 - (score / MAXCHEESE);
+        ratio = Mathf.Clamp(ratio, 0, 0.8f) + 0.2f;
+        return velocity * ratio;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
