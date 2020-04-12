@@ -10,6 +10,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool isTrueTopDownSprite;
     GameObject cornerTilemap;
 
+    //score depending on amount of cheese eaten
+    float score;
+    //max cheese consumption
+    const float MAXCHEESE = 20;
+    //cheese score
+    const float CHEESESCORE = 5;
+
     Vector2 currentVelocity;
 
     // Start is called before the first frame update
@@ -21,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
             speed = 0.5f;
         if (playerCamera == null)
             playerCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        score = 0;
     }
 
     // Update is called once per frame
@@ -45,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
+        currentVelocity = ComputeVelocityWithCheese(currentVelocity);
         transform.position += (Vector3) currentVelocity;
         playerCamera.position = transform.position + (Vector3.forward * -10);
     }
@@ -66,6 +75,14 @@ public class PlayerMovement : MonoBehaviour
         {
             cornerTilemap = collision.gameObject;
         }
+
+        if (collision.name.Contains("Cheese"))
+        {
+            Destroy(collision.gameObject);
+
+            //TODO: Determine what we want score to be
+            score += CHEESESCORE; 
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -74,5 +91,12 @@ public class PlayerMovement : MonoBehaviour
         {
             cornerTilemap = null;
         }
+    }
+
+    private Vector2 ComputeVelocityWithCheese(Vector2 velocity)
+    {
+        float ratio =  1 - (score / MAXCHEESE);
+        ratio = Mathf.Clamp(ratio, 0, 0.8f) + 0.2f;
+        return velocity * ratio;
     }
 }

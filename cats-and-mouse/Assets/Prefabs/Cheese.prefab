@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8587992376212817047}
   - component: {fileID: 4128144270829170903}
+  - component: {fileID: 2863902494686794700}
   m_Layer: 9
   m_Name: Cheese
   m_TagString: Untagged
@@ -80,3 +81,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &2863902494686794700
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8308559443651588874}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.18902993, y: 0.18705359}
+      - {x: -0.19075358, y: 0.12413265}
+      - {x: -0.2471503, y: 0.12351576}
+      - {x: -0.24914825, y: 0.06265699}
+      - {x: -0.3100207, y: 0.0627576}
+      - {x: -0.31303346, y: -0.0012188219}
+      - {x: -0.37604868, y: -0.0017457902}
+      - {x: -0.37334764, y: -0.30780917}
+      - {x: -0.31534684, y: -0.31099817}
+      - {x: -0.31125355, y: -0.37731275}
+      - {x: -0.25105512, y: -0.37734574}
+      - {x: -0.25107396, y: -0.44092548}
+      - {x: -0.18666887, y: -0.44226575}
+      - {x: -0.18696308, y: -0.5016936}
+      - {x: 0.12658036, y: -0.50528836}
+      - {x: 0.12510908, y: -0.4404742}
+      - {x: 0.18895006, y: -0.44009432}
+      - {x: 0.1887573, y: -0.37891212}
+      - {x: 0.24949348, y: -0.37861001}
+      - {x: 0.25104296, y: -0.3174693}
+      - {x: 0.31280375, y: -0.31673738}
+      - {x: 0.31475246, y: -0.005114481}
+      - {x: 0.2498312, y: -0.0042125955}
+      - {x: 0.2520001, y: 0.061362136}
+      - {x: 0.19062865, y: 0.060567647}
+      - {x: 0.19189918, y: 0.12400047}
+      - {x: 0.12621295, y: 0.12188744}
+      - {x: 0.12739003, y: 0.18399394}
