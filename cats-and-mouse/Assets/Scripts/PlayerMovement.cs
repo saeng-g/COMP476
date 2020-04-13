@@ -56,7 +56,11 @@ public class PlayerMovement : MonoBehaviour {
             isMoving = true;
         }
         else
+        {
             isMoving = false;
+            float rotationAngle = Mathf.Round(transform.rotation.eulerAngles.y / 180) * 180;
+            transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
+        }
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
         currentVelocity = ComputeVelocityWithCheese(currentVelocity);
