@@ -83,15 +83,26 @@ public class CatController : MonoBehaviour
 
     public Vector2 CalculateGlobalLocationEstimate()
     {
+        Debug.Log("Starting Global Location Estimate Calculation");
         int nbSmellAlerts = smellAlerts.Count;
+        Debug.LogFormat("There are {0} nbSmellAlerts", nbSmellAlerts);
         Vector2 averageSmellPosition = Vector2.zero;
+        Debug.Log("Initiallized averageSmellPosition: " + averageSmellPosition);
+
         if (nbSmellAlerts > 0)
         {
+            averageSmellPosition = smellAlerts.Pop();
+            Debug.LogFormat("Reinitializing averageSmellPosition: {0}", averageSmellPosition);
             while (smellAlerts.Count != 0)
             {
+                Debug.LogFormat("Adding {0} alert to average", smellAlerts.Peek());
+                Debug.LogFormat("Old average: {0}", averageSmellPosition);
                 averageSmellPosition += smellAlerts.Pop();
+                Debug.LogFormat("New average: {0}", averageSmellPosition);
             }
             averageSmellPosition /= nbSmellAlerts;
+
+            Debug.LogFormat("Average Post division: {0}", averageSmellPosition);
         }
 
         int nbHearAlerts = hearAlerts.Count;
@@ -99,16 +110,72 @@ public class CatController : MonoBehaviour
         Vector2 averageHearPosition = Vector2.zero;
         if (nbHearAlerts > 0)
         {
+            averageHearPosition = hearAlerts.Pop();
             while (hearAlerts.Count != 0)
             {
-                averageHearPosition += smellAlerts.Pop();
+                averageHearPosition += hearAlerts.Pop();
             }
             averageHearPosition /= nbHearAlerts;
         }
 
-        Vector2 finalEstimate = (smellToHearRatio * averageSmellPosition + averageHearPosition) / (smellToHearRatio + 1);
+        Vector2 finalEstimate = Vector2.zero;
+        if (nbSmellAlerts > 0 && nbHearAlerts > 0)
+            finalEstimate = (smellToHearRatio * averageSmellPosition + averageHearPosition) / (smellToHearRatio + 1);
+        else if (nbSmellAlerts > 0)
+            finalEstimate = averageSmellPosition;
+        else if (nbHearAlerts > 0)
+            finalEstimate = averageHearPosition;
         return finalEstimate;
     }
 
+
+    Vector2[] smellAlertsCopy;
+    Vector2[] hearAlertsCopy;
+    Vector2 gizmoEstimate;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(cats[0].transform.position, cats[1].transform.position);
+        Gizmos.DrawLine(cats[1].transform.position, cats[2].transform.position);
+        Gizmos.DrawLine(cats[2].transform.position, cats[0].transform.position);
+
+        if (smellAlerts == null || hearAlerts == null)
+            return;
+
+        if (smellAlerts.Count > 0)
+        {
+            smellAlertsCopy = smellAlerts.ToArray();
+        }
+        if (hearAlerts.Count > 0)
+        {
+            hearAlertsCopy = hearAlerts.ToArray();
+        }
+
+        if (smellAlerts.Count > 0 || hearAlerts.Count > 0)
+            gizmoEstimate = CalculateGlobalLocationEstimate();
+
+        if (smellAlertsCopy != null)
+        {
+            foreach (Vector2 alert in smellAlertsCopy)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(player.transform.position, alert);
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(alert, gizmoEstimate);
+            }
+        }
+
+        if (hearAlertsCopy != null)
+        {
+            foreach (Vector2 alert in hearAlertsCopy)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(player.transform.position, alert);
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(alert, gizmoEstimate);
+            }
+        }
+    }
 
 }

@@ -49,6 +49,8 @@ public class AlertManager : MonoBehaviour
         TickTimer();
         bool resetMouseHearAlertTimer = false;
         bool resetMouseSmellAlertTimer = false;
+        bool resetCatHearAlertTimer = false;
+        bool resetCatSmellAlertTimer = false;
         foreach (GameObject cat in cats)
         {
             float d = Vector2.Distance(cat.transform.position, mouse.transform.position);
@@ -80,7 +82,7 @@ public class AlertManager : MonoBehaviour
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, soundOffset);
                 //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
                 catController.AddAlert(vaguePosition, CatController.HEAR_ALERT);
-                ResetCatHearTimer();
+                resetCatHearAlertTimer = true;
             }
             else if (d <= catSmellRadius && catSmellAlertTimer <= 0)
             {
@@ -88,13 +90,17 @@ public class AlertManager : MonoBehaviour
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, smellOffset);
                 //cat.GetComponent<SteeringArrive>().SetTarget(vaguePosition); // TODO: adjust to strategy
                 catController.AddAlert(vaguePosition, CatController.SMELL_ALERT);
-                ResetCatSmellTimer();
+                resetCatSmellAlertTimer = true;
             }
         }
         if (resetMouseHearAlertTimer)
             ResetMouseHearTimer();
         if (resetMouseSmellAlertTimer)
             ResetMouseSmellTimer();
+        if (resetCatHearAlertTimer)
+            ResetCatHearTimer();
+        if (resetCatSmellAlertTimer)
+            ResetCatSmellTimer();
     }
 
     Vector2 RandomOffsetPosition(Vector2 position, float offset)
