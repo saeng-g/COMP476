@@ -11,19 +11,20 @@ public class SteeringArrive : MonoBehaviour
     [SerializeField] float maxAcceleration;
     [SerializeField] float t2t;
     [SerializeField] bool isTrueTopDown;
+    bool randomBehavior;
 
-    private Vector2 velocity;
-    private Vector2 acceleration;
+    public Vector2 velocity;
+    public Vector2 acceleration;
 
-    private float changeDirectionTimer;
+    public float changeDirectionTimer;
 
     // Start is called before the first frame update
     void Start()
     {
         velocity = Vector2.zero;
-        Debug.Log(velocity.magnitude);
         acceleration = Vector2.zero;
         target = this.transform.position;
+        randomBehavior = true;
         ResetChangeDirectionTimer();
     }
 
@@ -32,7 +33,10 @@ public class SteeringArrive : MonoBehaviour
     {
         // change direction if within timer
         // TODO: implement more robust behaviour
-        changeDirectionTimer -= Time.deltaTime;
+        if (randomBehavior)
+        {
+            changeDirectionTimer -= Time.deltaTime;
+        }
         if (changeDirectionTimer <= 0)
         {
             SetRandomTarget();
@@ -124,9 +128,21 @@ public class SteeringArrive : MonoBehaviour
         }
     }
 
+    // Check if character is moving
+    public bool IsMoving()
+    {
+        return velocity.magnitude > 0.1f;
+    }
+
     // Set Target to a particular position.
     public void SetTarget(Vector2 position)
     {
         this.target = position;
+        this.randomBehavior = false;
+    }
+
+    public void SetRandomBehavior(bool val)
+    {
+        this.randomBehavior = val;
     }
 }
