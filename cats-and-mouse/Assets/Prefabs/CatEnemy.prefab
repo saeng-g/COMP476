@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathfinder: {fileID: 1285074284}
-  epsilon: 2
+  epsilon: 1
   movementState: 0
   pathIndex: 0
   targetLocation: {x: 0, y: 0}
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0}
-  maxVelocity: 5
+  maxVelocity: 3
   maxAcceleration: 10
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0}
   radiusSlow: 1
-  radiusArrive: 0.3
+  radiusArrive: 0.1
   maxVelocity: 5
   maxAcceleration: 10
   t2t: 0.5

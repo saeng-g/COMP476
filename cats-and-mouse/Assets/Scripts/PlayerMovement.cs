@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] bool scrollCamera;
     [Tooltip("The light object that works as the players circle of sight")]
     [SerializeField] Transform visionLight;
+    [Tooltip("The animator attached to the character")]
+    [SerializeField] Animator animator;
 
     //[Tooltip("If using scrollCamera, set to true")]
     //[SerializeField] bool scrollCamera;
@@ -24,11 +26,12 @@ public class PlayerMovement : MonoBehaviour {
 
     // Cheese related fields
     //score depending on amount of cheese eaten
-    float score;
+    public float score;
     //max cheese consumption
-    const float MAXCHEESE = 20;
+    public const float MAXCHEESE = 100;
     //cheese score
-    const float CHEESESCORE = 5;
+    public const float CHEESESCORE = 5;
+    public const float CHEESEBARRELSCORE = 10;
 
     // Start is called before the first frame update
     void Start() {
@@ -41,6 +44,8 @@ public class PlayerMovement : MonoBehaviour {
             playerCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         if (visionLight == null)
             visionLight = GameObject.FindGameObjectWithTag("VisionLight").transform;
+        if (animator == null)
+            animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -53,10 +58,12 @@ public class PlayerMovement : MonoBehaviour {
             //CheckAdjacentTile(new Vector3(x, y, 0).normalized);
             float rotationAngle = (x < 0) ? 180 : 0;
             transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
+            SetToWalk(true);
             isMoving = true;
         }
         else
         {
+            SetToWalk(false);
             isMoving = false;
             float rotationAngle = Mathf.Round(transform.rotation.eulerAngles.y / 180) * 180;
             transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
@@ -70,7 +77,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // For pursue
-    Vector2 getNextPosition()
+    public Vector2 getNextPosition()
     {
         return (Vector2) transform.position + currentVelocity;
     }
@@ -101,6 +108,7 @@ public class PlayerMovement : MonoBehaviour {
         //luca's code
         if (collision.name.Contains("Cheese"))
         {
+            SetToHappy(true);
             Destroy(collision.gameObject);
 
             //TODO: Determine what we want score to be
@@ -111,7 +119,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector2 ComputeVelocityWithCheese(Vector2 velocity)
     {
         float ratio = 1 - (score / MAXCHEESE);
-        ratio = Mathf.Clamp(ratio, 0, 0.8f) + 0.2f;
+        ratio = Mathf.Clamp(ratio, 0, 0.6f) + 0.4f;
         return velocity * ratio;
     }
 
@@ -133,5 +141,29 @@ public class PlayerMovement : MonoBehaviour {
         {
             Gizmos.DrawLine(this.transform.position, toWp.transform.position);
         }
+    }
+
+
+    //animation related functions
+    void SetToWalk(bool yes)
+    {
+        animator.SetBool("isWalking", yes);
+    }
+
+    void SetToHappy(bool yes)
+    {
+        animator.SetBool("isHappy", yes);
+        if (yes)
+            Invoke("TimeOutHappiness", 3f);
+    }
+
+    void TimeOutHappiness()
+    {
+        animator.SetBool("isHappy", false);
+    }
+
+    void SetToExcited(bool yes)
+    {
+        animator.SetBool("isExcited", yes);
     }
 }
