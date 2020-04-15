@@ -19,7 +19,13 @@ public class PlayerMovement : MonoBehaviour {
 
     Vector2 currentVelocity;
 
-
+    //luca's code for cheese eating
+    //score depending on amount of cheese eaten
+    float score;
+    //max cheese consumption
+    const float MAXCHEESE = 20;
+    //cheese score
+    const float CHEESESCORE = 5;
 
     // Start is called before the first frame update
     void Start() {
@@ -61,8 +67,10 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         currentVelocity = speed * new Vector2(x, y) * Time.fixedDeltaTime;
+        currentVelocity = ComputeVelocityWithCheese(currentVelocity);
         transform.position += (Vector3) currentVelocity;
-        playerCamera.position = transform.position + (Vector3.forward * -10);
+        if (scrollCamera)
+            playerCamera.position = transform.position + (Vector3.forward * -10);
     }
 
     Vector2 getNextPosition()
@@ -82,6 +90,14 @@ public class PlayerMovement : MonoBehaviour {
         {
             cornerTilemap = collision.gameObject;
         }
+
+        //luca's code
+        if (collision.name.Contains("Cheese")) {
+            Destroy(collision.gameObject);
+
+            //TODO: Determine what we want score to be
+            score += CHEESESCORE;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -100,5 +116,12 @@ public class PlayerMovement : MonoBehaviour {
         {
             Gizmos.DrawLine(this.transform.position, toWp.transform.position);
         }
+    }
+
+    //more of luca's code for cheese infliencing speed
+    private Vector2 ComputeVelocityWithCheese(Vector2 velocity) {
+        float ratio = 1 - (score / MAXCHEESE);
+        ratio = Mathf.Clamp(ratio, 0, 0.8f) + 0.2f;
+        return velocity * ratio;
     }
 }
