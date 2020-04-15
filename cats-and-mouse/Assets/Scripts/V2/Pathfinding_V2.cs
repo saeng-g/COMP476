@@ -77,7 +77,7 @@ public class Pathfinding_V2 : MonoBehaviour
     // gets the closest node to a particular point
     public Node GetClosestNode(Vector2 point)
     {
-        Waypoint_V2 wp = Grid_V2.Instance.FindClosestWaypoint(point);
+        Waypoint_V2 wp = Grid_V2.Instance.FindClosestWaypoint(point, true);
         return new Node(wp);
     }
 

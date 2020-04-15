@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 723343058718555264}
   - component: {fileID: 723343058718555279}
   - component: {fileID: 6587004663585566201}
+  - component: {fileID: 1648924423805255722}
   m_Layer: 0
   m_Name: PlayerMouse
   m_TagString: Player
@@ -347,10 +348,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   playerCamera: {fileID: 0}
+  scrollCamera: 0
   visionLight: {fileID: 0}
   isMoving: 0
-  scrollCamera: 0
-  currentWaypointPlayer: {fileID: 0}
-  startingWaypoint: {fileID: 0}
-  currentWaypoint: {fileID: 0}
-  targetWaypoint: {fileID: 0}
+--- !u!95 &1648924423805255722
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723343058718555268}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4f8cfcd34879f40429a1ec63b07a50e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
