@@ -83,26 +83,26 @@ public class CatController : MonoBehaviour
 
     public Vector2 CalculateGlobalLocationEstimate()
     {
-        Debug.Log("Starting Global Location Estimate Calculation");
+        //Debug.Log("Starting Global Location Estimate Calculation");
         int nbSmellAlerts = smellAlerts.Count;
-        Debug.LogFormat("There are {0} nbSmellAlerts", nbSmellAlerts);
+        //Debug.LogFormat("There are {0} nbSmellAlerts", nbSmellAlerts);
         Vector2 averageSmellPosition = Vector2.zero;
-        Debug.Log("Initiallized averageSmellPosition: " + averageSmellPosition);
+        //Debug.Log("Initiallized averageSmellPosition: " + averageSmellPosition);
 
         if (nbSmellAlerts > 0)
         {
             averageSmellPosition = smellAlerts.Pop();
-            Debug.LogFormat("Reinitializing averageSmellPosition: {0}", averageSmellPosition);
+            //Debug.LogFormat("Reinitializing averageSmellPosition: {0}", averageSmellPosition);
             while (smellAlerts.Count != 0)
             {
-                Debug.LogFormat("Adding {0} alert to average", smellAlerts.Peek());
-                Debug.LogFormat("Old average: {0}", averageSmellPosition);
+                //Debug.LogFormat("Adding {0} alert to average", smellAlerts.Peek());
+                //Debug.LogFormat("Old average: {0}", averageSmellPosition);
                 averageSmellPosition += smellAlerts.Pop();
-                Debug.LogFormat("New average: {0}", averageSmellPosition);
+                //Debug.LogFormat("New average: {0}", averageSmellPosition);
             }
             averageSmellPosition /= nbSmellAlerts;
 
-            Debug.LogFormat("Average Post division: {0}", averageSmellPosition);
+            //Debug.LogFormat("Average Post division: {0}", averageSmellPosition);
         }
 
         int nbHearAlerts = hearAlerts.Count;

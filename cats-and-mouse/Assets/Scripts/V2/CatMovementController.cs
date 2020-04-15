@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,16 +53,21 @@ public class CatMovementController : MonoBehaviour
     void Update()
     {
         //For Testing
-        targetForPathfinding = FindObjectOfType<PlayerMovement>().transform.position;
-        UpdatePath();
-        if (movementState == MovementBehaviorState.ARRIVE)
-            Arrive();
-        else if (movementState == MovementBehaviorState.PURSUE)
-            Pursue();
-        else if (movementState == MovementBehaviorState.WANDER)
-            Wander();
-        else
-            Guard();
+        try {
+            targetForPathfinding = FindObjectOfType<PlayerMovement>().transform.position;
+            UpdatePath();
+            if (movementState == MovementBehaviorState.ARRIVE)
+                Arrive();
+            else if (movementState == MovementBehaviorState.PURSUE)
+                Pursue();
+            else if (movementState == MovementBehaviorState.WANDER)
+                Wander();
+            else
+                Guard();
+        }        
+        catch (NullReferenceException e) {
+            print("There is no more mouse; he was likely eaten.");
+        }       
     }
 
     private void UpdatePath()
