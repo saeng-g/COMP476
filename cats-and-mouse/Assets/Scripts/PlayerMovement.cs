@@ -33,6 +33,12 @@ public class PlayerMovement : MonoBehaviour {
     public const float CHEESESCORE = 5;
     public const float CHEESEBARRELSCORE = 10;
 
+    //link to menus script
+    public Menus menuScript;
+    //every time a piece of cheese is acquired, we will check the child count on this transform
+    //cheeseTilemap transform child count => number of cheese pickups left in level
+    public Transform cheeseTilemap;
+
     // Start is called before the first frame update
     void Start() {
         cornerTilemap = null;
@@ -46,6 +52,9 @@ public class PlayerMovement : MonoBehaviour {
             visionLight = GameObject.FindGameObjectWithTag("VisionLight").transform;
         if (animator == null)
             animator = GetComponent<Animator>();
+
+        //get reference to menus script as failsafe
+        menuScript = GameObject.FindObjectOfType<Menus>();
     }
 
     // Update is called once per frame
@@ -82,7 +91,8 @@ public class PlayerMovement : MonoBehaviour {
         return (Vector2) transform.position + currentVelocity;
     }
 
-    public GameObject getCorner()
+    //Gets corner closest to posElement
+    public GameObject getCorner(Vector2 posEstimate)
     {
         try
         {
@@ -113,6 +123,21 @@ public class PlayerMovement : MonoBehaviour {
 
             //TODO: Determine what we want score to be
             score += CHEESESCORE;
+            print("CHEESESCORE: " + score);
+
+            if (cheeseTilemap.childCount == 0) {
+                //player wins the game
+                menuScript.GameOverScreen(true);
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.name.Contains("CatEnemy")) {
+            //player loses the game
+            menuScript.GameOverScreen(false);
+            this.gameObject.SetActive(false);
+            //Destroy(this.gameObject);
         }
     }
 
@@ -120,6 +145,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         float ratio = 1 - (score / MAXCHEESE);
         ratio = Mathf.Clamp(ratio, 0, 0.6f) + 0.4f;
+        print("new speed: " + (velocity * ratio));
         return velocity * ratio;
     }
 

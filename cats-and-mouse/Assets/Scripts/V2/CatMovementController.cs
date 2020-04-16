@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,22 +47,26 @@ public class CatMovementController : MonoBehaviour
         movementState = MovementBehaviorState.PURSUE;
         targetLocation = transform.position;
         recomputePathTimer = 3f;
+        targetForPathfinding = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //For Testing
-        targetForPathfinding = FindObjectOfType<PlayerMovement>().transform.position;
+        if (FindObjectOfType<PlayerMovement>() == null) {
+            print("There is no more mouse; he was likely eaten.");
+            return;
+        }
+
         UpdatePath();
         if (movementState == MovementBehaviorState.ARRIVE)
-            Arrive();
+                Arrive();
         else if (movementState == MovementBehaviorState.PURSUE)
             Pursue();
         else if (movementState == MovementBehaviorState.WANDER)
             Wander();
         else
-            Guard();
+            Guard();  
     }
 
     private void UpdatePath()
@@ -158,6 +163,11 @@ public class CatMovementController : MonoBehaviour
         this.movementState = state;
     }
 
+    public Pathfinding_V2.Path GetPath()
+    {
+        return pathToFollow;
+    }
+
     private void OnDrawGizmos()
     {
         if (pathToFollow == null || !this.enabled)
@@ -170,5 +180,10 @@ public class CatMovementController : MonoBehaviour
                 Gizmos.DrawLine(e.from.wp.transform.position, e.node.wp.transform.position);
             }
         }
+    }
+
+    public bool Equals(CatMovementController other)
+    {
+        return this.GetInstanceID() == other.GetInstanceID();
     }
 }
