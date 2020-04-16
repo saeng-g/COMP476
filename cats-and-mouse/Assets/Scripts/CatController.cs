@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CatController : MonoBehaviour
@@ -25,6 +26,7 @@ public class CatController : MonoBehaviour
         playerCornered = false;
         smellAlerts = new Stack<Vector2>();
         hearAlerts = new Stack<Vector2>();
+        gizmoEstimate = Vector2.zero;
     }
     // Update is called once per frame
     void Update()
@@ -39,35 +41,106 @@ public class CatController : MonoBehaviour
 
     void CheckPlayerCornered()
     {
-        GameObject corner = player.getCorner();
+        Vector2? targetPos = CalculateGlobalLocationEstimate();
+
+        //TODO: Might wanna make all cats just wander
+        if (targetPos == null)
+        {
+            return;
+        }
+
+        GameObject corner = player.getCorner(targetPos.Value);
         if (corner != null)
         {
+
+            //if corner was already computed, do nothing cats shoul already be cornering
+            if (playerCornered)
+            {
+                return;
+            }
+
             playerCornered = true;
-            List<Vector2> tacticalLocations = corner.GetComponent<TacticalRegion>().getTacticalWaypointLocations();
-            Dictionary<Vector2, GameObject> catTargetDict = new Dictionary<Vector2, GameObject>();
-            Dictionary<Vector2, float> minDistDict = new Dictionary<Vector2, float>();
-
-            foreach (Vector2 loc in tacticalLocations)
-            {
-                List<float> distances = new List<GameObject>(cats).ConvertAll(x => Vector2.Distance(x.transform.position, loc));
-                int minIndex = distances.FindIndex(x => x.Equals(Mathf.Min(distances.ToArray())));
-                if (!catTargetDict.ContainsValue(cats[minIndex]))
-                {
-                    catTargetDict.Add(loc, cats[minIndex]);
-                    minDistDict.Add(loc, distances[minIndex]);
-                }
-            }
-
-            foreach(KeyValuePair<Vector2, GameObject> pair in catTargetDict)
-            {
-                CatMovementController cmc = pair.Value.GetComponent<CatMovementController>();
-                cmc.ForceUpdatePath(pair.Key);
-                cmc.ChangeMovementState(MovementBehaviorState.ARRIVE);
-            }
+            CornerPlayer(corner);
         }
         else
         {
             playerCornered = false;
+
+            //check for closest cat and go to mouse estimate location
+            //other cats will wander
+            CatMovementController closest = null;
+            float min_dist = float.MaxValue;
+            for (int i = 0; i < cats.Length; ++i)
+            {
+                CatMovementController cmc = cats[i].GetComponent<CatMovementController>();
+                cmc.ForceUpdatePath(targetPos.Value);
+                float curr_dist = cmc.GetPath().GetPathLength();
+
+                if (closest == null)
+                {
+                    cmc.ChangeMovementState(MovementBehaviorState.PURSUE);
+                    min_dist = curr_dist;
+                    closest = cmc;
+                } else if (curr_dist < min_dist)
+                {
+                    closest.ChangeMovementState(MovementBehaviorState.WANDER);
+
+                    cmc.ChangeMovementState(MovementBehaviorState.PURSUE);
+                    min_dist = curr_dist;
+                    closest = cmc;
+                } else
+                {
+                    cmc.ChangeMovementState(MovementBehaviorState.WANDER);
+                }
+
+            }
+
+            //debugging
+            gizmoEstimate = targetPos.Value;
+        }
+    }
+
+    //Corners the player in the passed tactical region
+    private void CornerPlayer(GameObject corner)
+    {
+        List<Vector2> tacticalLocations = corner.GetComponent<TacticalRegion>().getTacticalWaypointLocations();
+        List<int> indexes_unused = Enumerable.Range(0, cats.Length).ToList();
+
+        foreach (Vector2 loc in tacticalLocations)
+        {
+            int ind_used = -1;
+            float min_dist = float.MaxValue;
+            for (int i = 0; i < cats.Length; ++i)
+            {
+                if (!indexes_unused.Contains(i))
+                {
+                    continue;
+                }
+
+                float dist = Vector2.Distance(cats[i].transform.position, loc);
+                if (dist < min_dist)
+                {
+                    min_dist = dist;
+                    ind_used = i;
+                }
+            }
+
+            if (ind_used == -1)
+            {
+                return;
+            }
+
+            CatMovementController cmc = cats[ind_used].GetComponent<CatMovementController>();
+            cmc.ForceUpdatePath(loc);
+            cmc.ChangeMovementState(MovementBehaviorState.ARRIVE);
+
+            indexes_unused.Remove(ind_used);
+        }
+
+        foreach (int unused in indexes_unused)
+        {
+            CatMovementController cmc = cats[unused].GetComponent<CatMovementController>();
+            cmc.ChangeMovementState(MovementBehaviorState.WANDER);
         }
     }
 
@@ -81,7 +154,8 @@ public class CatController : MonoBehaviour
             hearAlerts.Push(alertPos);
     }
 
-    public Vector2 CalculateGlobalLocationEstimate()
+    //calculates player location based on smell and sound
+    public Vector2? CalculateGlobalLocationEstimate()
     {
         //Debug.Log("Starting Global Location Estimate Calculation");
         int nbSmellAlerts = smellAlerts.Count;
@@ -91,6 +165,9 @@ public class CatController : MonoBehaviour
 
         if (nbSmellAlerts > 0)
         {
+            //debugging
+            smellAlertsCopy = smellAlerts.ToArray();
+
             averageSmellPosition = smellAlerts.Pop();
             //Debug.LogFormat("Reinitializing averageSmellPosition: {0}", averageSmellPosition);
             while (smellAlerts.Count != 0)
@@ -110,6 +187,9 @@ public class CatController : MonoBehaviour
         Vector2 averageHearPosition = Vector2.zero;
         if (nbHearAlerts > 0)
         {
+            //debugging
+            hearAlertsCopy = hearAlerts.ToArray();
+
             averageHearPosition = hearAlerts.Pop();
             while (hearAlerts.Count != 0)
             {
@@ -118,42 +198,26 @@ public class CatController : MonoBehaviour
             averageHearPosition /= nbHearAlerts;
         }
 
-        Vector2 finalEstimate = Vector2.zero;
         if (nbSmellAlerts > 0 && nbHearAlerts > 0)
-            finalEstimate = (smellToHearRatio * averageSmellPosition + averageHearPosition) / (smellToHearRatio + 1);
+            return (smellToHearRatio * averageSmellPosition + averageHearPosition) / (smellToHearRatio + 1);
         else if (nbSmellAlerts > 0)
-            finalEstimate = averageSmellPosition;
+            return averageSmellPosition;
         else if (nbHearAlerts > 0)
-            finalEstimate = averageHearPosition;
-        return finalEstimate;
+            return averageHearPosition;
+        return null;
     }
-
 
     Vector2[] smellAlertsCopy;
     Vector2[] hearAlertsCopy;
     Vector2 gizmoEstimate;
 
+    //Debugging
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(cats[0].transform.position, cats[1].transform.position);
         Gizmos.DrawLine(cats[1].transform.position, cats[2].transform.position);
         Gizmos.DrawLine(cats[2].transform.position, cats[0].transform.position);
-
-        if (smellAlerts == null || hearAlerts == null)
-            return;
-
-        if (smellAlerts.Count > 0)
-        {
-            smellAlertsCopy = smellAlerts.ToArray();
-        }
-        if (hearAlerts.Count > 0)
-        {
-            hearAlertsCopy = hearAlerts.ToArray();
-        }
-
-        if (smellAlerts.Count > 0 || hearAlerts.Count > 0)
-            gizmoEstimate = CalculateGlobalLocationEstimate();
 
         if (smellAlertsCopy != null)
         {

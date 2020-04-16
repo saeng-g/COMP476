@@ -70,6 +70,11 @@ public class Pathfinding_V2 : MonoBehaviour
             trimmedPathEntryList.Clear();
             trimmedPathCoordList.Clear();
         }
+
+        public float GetPathLength()
+        {
+            return trimmedPathEntryList[trimmedPathEntryList.Count - 1].fx;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
