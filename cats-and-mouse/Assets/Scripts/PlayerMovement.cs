@@ -91,7 +91,8 @@ public class PlayerMovement : MonoBehaviour {
         return (Vector2) transform.position + currentVelocity;
     }
 
-    public GameObject getCorner()
+    //Gets corner closest to posElement
+    public GameObject getCorner(Vector2 posEstimate)
     {
         try
         {
