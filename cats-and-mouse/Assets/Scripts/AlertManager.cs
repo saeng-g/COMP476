@@ -30,6 +30,9 @@ public class AlertManager : MonoBehaviour
     private float mouseHearAlertTimer;
     private float mouseSmellAlertTimer;
 
+    [HideInInspector]
+    public bool gameIsOver = false;
+
     // Start is called before the first frame update
     void Start()
     {
