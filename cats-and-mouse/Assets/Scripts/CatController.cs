@@ -27,6 +27,11 @@ public class CatController : MonoBehaviour
         smellAlerts = new Stack<Vector2>();
         hearAlerts = new Stack<Vector2>();
         gizmoEstimate = Vector2.zero;
+
+        //Ignore cat collisions
+        Physics2D.IgnoreCollision(cats[0].GetComponent<Collider2D>(), cats[1].GetComponent<Collider2D>());
+        Physics2D.IgnoreCollision(cats[0].GetComponent<Collider2D>(), cats[2].GetComponent<Collider2D>());
+        Physics2D.IgnoreCollision(cats[1].GetComponent<Collider2D>(), cats[2].GetComponent<Collider2D>());
     }
     // Update is called once per frame
     void Update()

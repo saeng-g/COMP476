@@ -88,7 +88,8 @@ public class SteeringArrive_V2 : CatMovementScript
     // Check if character is moving
     public override bool IsMoving()
     {
-        return velocity.magnitude > 0.1f;
+        Debug.Log(velocity.magnitude == 0);
+        return velocity.magnitude == 0;
     }
 
     private void OnDrawGizmos()

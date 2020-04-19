@@ -67,7 +67,8 @@ public class SteeringPursue_V2 : CatMovementScript
 
     public override bool IsMoving()
     {
-        return velocity.magnitude > 0.1f;
+        Debug.Log(velocity.magnitude == 0);
+        return velocity.magnitude == 0;
     }
 
     private void OnDrawGizmos()

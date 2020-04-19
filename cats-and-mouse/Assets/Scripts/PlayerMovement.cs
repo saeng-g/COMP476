@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour {
     //score depending on amount of cheese eaten
     public float score;
     //max cheese consumption
-    public const float MAXCHEESE = 100;
+    public const float MAXCHEESE = 200;
     //cheese score
     public const float CHEESESCORE = 5;
     public const float CHEESEBARRELSCORE = 10;
@@ -145,7 +145,6 @@ public class PlayerMovement : MonoBehaviour {
     {
         float ratio = 1 - (score / MAXCHEESE);
         ratio = Mathf.Clamp(ratio, 0, 0.6f) + 0.4f;
-        print("new speed: " + (velocity * ratio));
         return velocity * ratio;
     }
 

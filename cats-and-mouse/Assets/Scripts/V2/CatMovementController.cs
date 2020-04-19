@@ -18,7 +18,9 @@ public class CatMovementController : MonoBehaviour
     [Tooltip("Pathfinding script")]
     [SerializeField] Pathfinding_V2 pathfinder;
     [Tooltip("How close to the target before updating pathIndex")]
-    [SerializeField] float epsilon;
+    [SerializeField] float pursueEpsilon;
+    [Tooltip("How close to the target before updating pathIndex")]
+    [SerializeField] float arriveEpsilon;
     [Tooltip("To easily check what state the cat is in (for testing")]
     [SerializeField] MovementBehaviorState movementState;
     [Tooltip("To see how far along the path the cat is (for testing")]
@@ -33,6 +35,9 @@ public class CatMovementController : MonoBehaviour
     [SerializeField] CatMovementScript steeringArriveScript;
     [Tooltip("Script for pursue behaviour")]
     [SerializeField] CatMovementScript steeringPursueScript;
+    [Tooltip("Script for wandering behaviour")]
+    [SerializeField] CatWandering wanderingScript;
+
     // TODO: Wander and Guard movements
 
     // RefreshTimer
@@ -40,14 +45,16 @@ public class CatMovementController : MonoBehaviour
     [SerializeField] float recomputePathTime;
     [SerializeField] private float recomputePathTimer;
 
+    private PlayerMovement player;
 
     // Start is called before the first frame update
     void Start()
     {
-        movementState = MovementBehaviorState.PURSUE;
+        movementState = MovementBehaviorState.WANDER;
         targetLocation = transform.position;
         recomputePathTimer = 3f;
         targetForPathfinding = transform.position;
+        player = FindObjectOfType<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -58,21 +65,22 @@ public class CatMovementController : MonoBehaviour
             return;
         }
 
+        RefocusToVision();
         UpdatePath();
         if (movementState == MovementBehaviorState.ARRIVE)
-                Arrive();
+            Arrive();
         else if (movementState == MovementBehaviorState.PURSUE)
             Pursue();
         else if (movementState == MovementBehaviorState.WANDER)
             Wander();
         else
-            Guard();  
+            Guard();
     }
 
     private void UpdatePath()
     {
         recomputePathTimer -= Time.deltaTime;
-        if (recomputePathTimer <= 0)
+        if (recomputePathTimer <= 0 && movementState != MovementBehaviorState.WANDER)
         {
             GetNewPath();
             movementState = MovementBehaviorState.PURSUE;
@@ -80,6 +88,7 @@ public class CatMovementController : MonoBehaviour
         }
 
         float distanceToTarget = Vector2.Distance(targetLocation, transform.position);
+        float epsilon = movementState == MovementBehaviorState.ARRIVE ? arriveEpsilon : pursueEpsilon;
         if (distanceToTarget <= epsilon && pathToFollow != null)
         {
             if (pathIndex >= pathToFollow.trimmedPathCoordList.Count - 1)
@@ -115,6 +124,7 @@ public class CatMovementController : MonoBehaviour
     {
         steeringArriveScript.enabled = true;
         steeringPursueScript.enabled = false;
+        wanderingScript.enabled = false;
 
         steeringArriveScript.SetTarget(targetLocation);
     }
@@ -124,6 +134,7 @@ public class CatMovementController : MonoBehaviour
     {
         steeringArriveScript.enabled = false;
         steeringPursueScript.enabled = true;
+        wanderingScript.enabled = false;
 
         steeringPursueScript.SetTarget(targetLocation);
     }
@@ -133,7 +144,7 @@ public class CatMovementController : MonoBehaviour
     {
         steeringArriveScript.enabled = false;
         steeringPursueScript.enabled = false;
-
+        wanderingScript.enabled = true;
         //wander
     }
 
@@ -142,6 +153,7 @@ public class CatMovementController : MonoBehaviour
     {
         steeringArriveScript.enabled = false;
         steeringPursueScript.enabled = false;
+        wanderingScript.enabled = false;
 
         //guard
     }
@@ -161,6 +173,24 @@ public class CatMovementController : MonoBehaviour
     public void ChangeMovementState(MovementBehaviorState state)
     {
         this.movementState = state;
+    }
+
+    public void RefocusToVision()
+    {
+        if (IsPlayerSeen() && movementState != MovementBehaviorState.ARRIVE)
+        {
+            ForceUpdatePath(player.transform.position);
+            movementState = MovementBehaviorState.PURSUE;
+        }
+    }
+
+    private bool IsPlayerSeen()
+    {
+        if (Vector2.Distance(player.transform.position, this.transform.position) <= 5)
+        {
+            return true;
+        }
+        else return false;
     }
 
     public Pathfinding_V2.Path GetPath()
