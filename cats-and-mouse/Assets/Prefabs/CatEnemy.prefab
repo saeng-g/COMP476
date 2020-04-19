@@ -153,13 +153,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathfinder: {fileID: 1285074284}
-  epsilon: 1
+  pursueEpsilon: 0.5
+  arriveEpsilon: 0.5
   movementState: 0
   pathIndex: 0
   targetLocation: {x: 0, y: 0}
   targetForPathfinding: {x: 0, y: 0}
   steeringArriveScript: {fileID: 1081553394}
   steeringPursueScript: {fileID: 1081553395}
+  wanderingScript: {fileID: -5059282068516853055}
   recomputePathTime: 1
   recomputePathTimer: 0
 --- !u!114 &1081553395
@@ -193,8 +195,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0}
   radiusSlow: 1
-  radiusArrive: 0.1
-  maxVelocity: 5
+  radiusArrive: 0.3
+  maxVelocity: 3
   maxAcceleration: 10
   t2t: 0.5
   velocity: {x: 0, y: 0}
@@ -251,7 +253,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3579117863445871000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2aeafec6115f92499481274e11aa831, type: 3}
   m_Name: 

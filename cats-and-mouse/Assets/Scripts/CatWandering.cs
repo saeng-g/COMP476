@@ -9,7 +9,7 @@ public class CatWandering : MonoBehaviour
   
     int flag = 3;
     int coll = 0;
-   float interval=10;
+    float interval=10;
     float RandomTime = 0;
    
     // Start is called before the first frame update
@@ -102,6 +102,8 @@ public class CatWandering : MonoBehaviour
 
 
     }
+
+    //
     private void OnTriggerEnter2D(Collider2D col)
     {
         if ((col.gameObject.tag == "Wall" || col.gameObject.tag == "Cat") && coll == 0)
@@ -110,10 +112,10 @@ public class CatWandering : MonoBehaviour
 
             coll = 1;
         }
+    }
 
-       
-     
-
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        coll = 1;
     }
 }
