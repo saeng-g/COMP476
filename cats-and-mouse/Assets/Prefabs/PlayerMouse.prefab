@@ -310,8 +310,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5625, y: 1.25}
+  m_Offset: {x: 0, y: -0.024155915}
+  m_Size: {x: 0.5625, y: 0.88766015}
   m_Direction: 0
 --- !u!50 &723343058718555279
 Rigidbody2D:
@@ -350,7 +350,11 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   scrollCamera: 0
   visionLight: {fileID: 0}
+  animator: {fileID: 0}
   isMoving: 0
+  score: 0
+  menuScript: {fileID: 0}
+  cheeseTilemap: {fileID: 0}
 --- !u!95 &1648924423805255722
 Animator:
   serializedVersion: 3
