@@ -68,7 +68,7 @@ public class AlertManager : MonoBehaviour
                 Instantiate<GameObject>(soundAlert, onScreenPosition, Quaternion.identity);
                 resetMouseHearAlertTimer = true;
             }
-            else if (d <= mouseSmellRadius && mouseSmellAlertTimer <= 0)
+            if (d <= mouseSmellRadius && mouseSmellAlertTimer <= 0)
             {
                 // alert player of cat smell
                 Vector2 vaguePosition = RandomOffsetPosition(cat.transform.position, smellOffset);
@@ -87,7 +87,7 @@ public class AlertManager : MonoBehaviour
                 catController.AddAlert(vaguePosition, CatController.HEAR_ALERT);
                 resetCatHearAlertTimer = true;
             }
-            else if (d <= catSmellRadius && catSmellAlertTimer <= 0)
+            if (d <= catSmellRadius && catSmellAlertTimer <= 0)
             {
                 // alert cats of mouse smell
                 Vector2 vaguePosition = RandomOffsetPosition(mouse.transform.position, smellOffset);
